@@ -4,8 +4,10 @@
 # Objective : reinforcemnet Learnig based traning for differnt morphologies utilizing     #
 # different mechanical tail to achieve stable gait motion                                 #  
 # The assisment was done under the supervision of Dr. Alexander Klimchik, SoCS, UoL       #
-#For indepth understanding of usability of the research and the code refer to study matter# 
+#For indepth understanding of usability of the research and the code refer to study matter#
 ###########################################################################################
+# @ part of the code has been derived from the course taught by Prof.H Cuayahuitl for CMP9137 dated 11 March 2024
+
 import os
 import gymnasium as gym
 from gymnasium import spaces
@@ -25,24 +27,29 @@ from stable_baselines3.common.results_plotter import load_results, ts2xy
 
 from stable_baselines3.common.callbacks import EvalCallback
 
-#Below is the path for the modified XML model
+#Below is the path for the modified XML model. 
+#This is were you shall define the path to model that you designed.
+#Please note from the scope this project the model was created in XML but there are other formats that can be passed to the environment.
+# Please refer to the official Farmana Gymnasium website for further details on how to achieve this.
 path_to_xml= ''
 
 
 #Define paths for logs and model saves
+#Please update the two line below as per your case 
+#This helps in keeping track of the progress and creates an archive of the work
 log_dir = "./tb_ant_logs/"
 model_save_path = "ppo_ant_real"
 
-#Create directories if they do not exist
+#Create directories if they do not exist 
 os.makedirs(log_dir, exist_ok=True)
 os.makedirs(model_save_path, exist_ok=True)
 
-
+#May toggle the two variable defined below for your usecase
 seed = random.randint(0,1000) 
 learning_rate = 0.0003
 
 #Custom policy to introduce policy network and value network 
-#This is an attempt to pelicate the policiy networl from (Henderson ,2019)
+#This is an attempt to repelicate the policy network from (Henderson ,2019)
 #Henderson, P., Islam, R., Bachman, P., Pineau, J., Precup, D., Meger, D., 2019. Deep Reinforcement Learning that Matters. 
 #The code is available from : https://stable-baselines3.readthedocs.io/en/master/guide/custom_policy.html
 class CustomNetwork(nn.Module):
@@ -116,17 +123,17 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
         self.mlp_extractor = CustomNetwork(self.features_dim)
 
 
-#Create environment
+#Create environment 
 env = gym.make('Hopper-v4',xml_file = path_to_xml)# ctrl_cost_weight=0.1= ,xml_file = , reset_noise_scale = ....)
 
 #Create model with TensorBoard callback
 model = PPO(CustomActorCriticPolicy, env, verbose=1, device = 'cuda', tensorboard_log=log_dir)
 
-#below is callback function the check the model reward against a constrain set by teacher
+#Below is a callback function that check the model reward against a constrain set by teacher(user)
 #Upon a match it shall register the specific state 
 ## origanally avaialable from from https://stable-baselines3.readthedocs.io/en/master/guide/callback.html
-#instance for callback
 
+#Instance for callback
 callback = EvalCallback(env, best_model_save_path="./tb_logs/",
                              log_path="./tb_logs/", eval_freq=500,
                              deterministic=True, render=False)
