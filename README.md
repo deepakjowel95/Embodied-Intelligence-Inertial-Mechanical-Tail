@@ -7,5 +7,3 @@ Within the submission folder you shall find testing.py. The code has detailed co
 Please note a model fine is not in this and shall be uploaded the near future. Meanwhile shal suggest you to run your own model.
 
 The software can be used to train agents in differnt environment from Farama Gymnasium package. From the scope of this project, as the attempt was to test the usabilty of inertial mechanical tail with different gaits and morphologies, differnt environment can be choosen to train your agent. Please note the constrains for the environment have been predefined by Farama and minor change can made to suit your implementation. The cheetah environment can be used to train a quadrapod and the humanoid environment can used to train bipedal with human morphology.
-
-NOTE : At this point the repository is not complete and progress is being made to finish as soon as possible.
